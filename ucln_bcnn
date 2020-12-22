@@ -1,0 +1,194 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+int Nhap_so_nguyen()
+{
+    int num = -1;
+    bool validInput = false;
+    cout << "Nhap so nguyen duong: ";
+    cin >> num;
+    while (!validInput && num <= 1) // trong khi num dang con chua hop le
+    {
+        if (cin.fail())
+        {
+            cin.clear(); // xoa bo dem
+            cin.ignore(1000, '\n');
+            cout << "Nhap sai dinh dang, nhap lai: ";
+            cin >> num;
+        }
+        if (!cin.fail() && num > 1) //  nhap chinh xac
+            validInput = true;
+        else if (num <= 1 && !cin.fail())
+        {
+            cout << "Nhap so nguyen lon hon 1: ";
+            cin >> num;
+        }
+    }
+    return num;
+}
+int UCLN(int base[], int exponent[], int &size, int Num1, int Num2)
+{
+    int x;
+    if (Num1 < Num2)
+        x = Num1;
+    else
+        x = Num2;
+    bool base1[100] = {false};
+    int exponent1[100];
+    int size1 = 0;
+    for (int i = 2; i <= x; i++) // phan tich num 1 ra thua so nt
+    {
+        if (Num1 <= 1 && Num2 <= 1)
+            break;
+        if (Num1 % i == 0)
+        {
+            int exp = 0;
+            if (base1[i] == false)
+            {
+                base1[i] = true;
+                size1++;
+            }
+            while (Num1 % i == 0)
+            {
+                exp++;
+                Num1 = Num1 / i;
+            }
+            exponent1[i] = exp;
+        }
+        if (Num2 % i == 0)
+        {
+            int exp = 0;
+            if (base1[i] == false)
+            {
+                base1[i] = true;
+                size1++;
+            }
+            while (Num2 % i == 0)
+            {
+                exp++;
+                Num2 = Num2 / i;
+            }
+            if (exponent1[i] > exp)
+                exponent1[i] = exp;
+        }
+    }
+    // luu cac ket qua
+    size = 0;
+    int ucln = 1;
+    for (int i = 0; i < 100; i++)
+    {
+        if (base1[i] == true)
+        {
+            base[size] = i;
+            exponent[size] = exponent1[i];
+            ucln = ucln * pow(i, exponent1[i]);
+            size++;
+        }
+    }
+    return ucln;
+}
+int BCNN(int base[], int exponent[], int &size, int Num1, int Num2)
+{
+    int x;
+    if (Num1 < Num2)
+        x = Num1;
+    else
+        x = Num2;
+    bool base1[100] = {false};
+    int exponent1[100];
+    int size1 = 0;
+    for (int i = 2; i <= x; i++) // phan tich num 1 ra thua so nt
+    {
+        if (Num1 <= 1 && Num2 <= 1)
+            break;
+        if (Num1 % i == 0)
+        {
+            int exp = 0;
+            if (base1[i] == false)
+            {
+                base1[i] = true;
+                size1++;
+            }
+            while (Num1 % i == 0)
+            {
+                exp++;
+                Num1 = Num1 / i;
+            }
+            exponent1[i] = exp;
+        }
+        if (Num2 % i == 0)
+        {
+            int exp = 0;
+            if (base1[i] == false)
+            {
+                base1[i] = true;
+                size1++;
+            }
+            while (Num2 % i == 0)
+            {
+                exp++;
+                Num2 = Num2 / i;
+            }
+            if (exponent1[i] < exp)
+                exponent1[i] = exp;
+        }
+    }
+    // luu cac ket qua
+    size = 0;
+    int ucln = 1;
+    for (int i = 0; i < 100; i++)
+    {
+        if (base1[i] == true)
+        {
+            base[size] = i;
+            exponent[size] = exponent1[i];
+            ucln = ucln * pow(i, exponent1[i]);
+            size++;
+        }
+    }
+    return ucln;
+}
+void In_Ket_Qua(int base[], int exponent[], int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (i != size - 1)
+        {
+            for (int j = 0; j < exponent[i]; j++)
+            {
+                cout << base[i] << " * ";
+            }
+        }
+        else
+        {
+            for (int j = 0; j < exponent[i]; j++)
+            {
+                if (j != exponent[i] - 1)
+                    cout << base[i] << " * ";
+                else
+                    cout << base[i];
+            }
+        }
+    }
+}
+int main()
+{
+    int a[100], b[100];
+    int intNumber1 = Nhap_so_nguyen();
+    int intNumber2 = Nhap_so_nguyen();
+
+    int size = 0;
+    // in ra ucln
+    int ucln = UCLN(a, b, size, intNumber1, intNumber2);
+    cout << "UCLN (" << intNumber1 << ", " << intNumber2 << ") = ";
+    In_Ket_Qua(a, b, size);
+    cout << " = " << ucln << endl;
+
+    // in ra bcnn
+    int bcnn = BCNN(a, b, size, intNumber1, intNumber2);
+    cout << "BCNN (" << intNumber1 << ", " << intNumber2 << ") = ";
+    In_Ket_Qua(a, b, size);
+    cout << " = " << bcnn;
+    cout << endl;
+    system("pause");
+}
